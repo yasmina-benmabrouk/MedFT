@@ -1,0 +1,52 @@
+# Reference config for MedFT's LoRA/QLoRA fine-tuning run.
+# The notebook's CFG cell (notebooks/medft-lora-ft-of-mvlm.ipynb) is the source of truth
+# for v1.0 — this file documents the same values for a future CLI.
+# Sized for a single NVIDIA T4 (16 GB VRAM), the free Kaggle GPU tier.
+
+# Data
+data_dir: /kaggle/input/chest-xrays-indiana-university
+output_dir: /kaggle/working/outputs
+frontal_only: true
+seed: 42
+
+# Base model
+model_id: Qwen/Qwen2.5-VL-7B-Instruct
+min_pixels: 200704   # 256 * 28 * 28
+max_pixels: 602112   # 768 * 28 * 28
+max_image_side: 1024
+
+# Quantization (QLoRA)
+load_in_4bit: true
+bnb_4bit_quant_type: nf4
+bnb_4bit_compute_dtype: float16   # T4 = Turing, no native bf16 tensor cores
+bnb_4bit_use_double_quant: true
+
+# LoRA
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+lora_target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+lora_bias: none
+task_type: CAUSAL_LM
+
+# Training
+num_train_epochs: 3
+learning_rate: 2.0e-4
+train_batch_size: 1
+grad_accum_steps: 8
+optim: paged_adamw_8bit
+gradient_checkpointing: true
+fp16: true
+logging_steps: 5
+
+# Generation / evaluation
+max_new_tokens: 250
+num_eval_samples: 100
+bertscore_model: roberta-large

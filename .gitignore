@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Generated outputs not published
+results/adapters/*
+!results/adapters/.gitkeep
+results/predictions/*
+!results/predictions/.gitkeep
+
+
+# Methodology write-up not published yet
+docs/methodology.md
+
+
+# OS / editor
+.DS_Store
+.vscode/
+*.log

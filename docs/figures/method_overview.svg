@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1740 620" role="img" aria-label="Diagram of the MedFT pipeline: a single Qwen2.5-VL-7B-Instruct model is loaded once in 4-bit QLoRA, evaluated zero-shot on a held-out test split with the LoRA adapter disabled, then fine-tuned on the train split with the adapter, then evaluated again on the same test split with the adapter enabled, and both report sets are scored with paired metrics.">
+  <title>MedFT Method Overview</title>
+  <desc>OpenI IU X-Ray splits into a train and a held-out test set. One Qwen2.5-VL-7B-Instruct instance, loaded once in 4-bit QLoRA, is evaluated zero-shot on the test split with its LoRA adapter disabled (pass 1), then supervised fine-tuned on the train split via label-masked teacher forcing (pass 2), then evaluated again on the identical test split with the adapter enabled (pass 3). Both generated-report sets are scored against the same ground truth with paired NLP and engineering metrics.</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1740" height="620" fill="#ffffff"/>
+
+  <text x="870" y="34" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" fill="#111827">MedFT — Method Overview</text>
+
+  <!-- Data source -->
+  <rect x="30" y="255" width="190" height="110" rx="8" fill="#eef4fb" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="125" y="282" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#1f2937">OpenI IU X-Ray</text>
+  <text x="125" y="304" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#374151">CXR image +</text>
+  <text x="125" y="320" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#374151">FINDINGS / IMPRESSION</text>
+  <text x="125" y="336" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#374151">approx. 7,400 samples</text>
+
+  <!-- fork label -->
+  <text x="248" y="222" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#6b7280">seeded 80/10/10</text>
+  <text x="248" y="235" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#6b7280">split (seed = 42)</text>
+
+  <!-- fork arrows -->
+  <path d="M220,310 L280,155" fill="none" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M220,310 L280,475" fill="none" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Test split box -->
+  <rect x="280" y="90" width="220" height="110" rx="8" fill="#eef4fb" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="390" y="123" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#1f2937">Test split</text>
+  <text x="390" y="145" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#374151">held out, n = 100</text>
+  <text x="390" y="163" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#374151">never used for training</text>
+
+  <!-- Train split box -->
+  <rect x="280" y="430" width="220" height="110" rx="8" fill="#eef4fb" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="390" y="463" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#1f2937">Train split</text>
+  <text x="390" y="485" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#374151">used only for</text>
+  <text x="390" y="503" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#374151">LoRA fine-tuning (SFT)</text>
+
+  <!-- Model box (highlighted - the single persistent instance) -->
+  <rect x="590" y="70" width="380" height="460" rx="10" fill="#fff3e0" stroke="#c2760f" stroke-width="2"/>
+  <text x="780" y="255" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" fill="#7c4a03">Qwen2.5-VL-7B-Instruct</text>
+  <text x="780" y="281" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#5c4325">loaded ONCE, 4-bit NF4 (QLoRA)</text>
+  <text x="780" y="301" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#5c4325">frozen base weights W0</text>
+  <text x="780" y="321" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#5c4325">+ LoRA adapter: r = 16, alpha = 32</text>
+  <text x="780" y="341" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#5c4325">(attention + MLP projections only)</text>
+
+  <!-- Arrow 1: test -> model (top), zero-shot -->
+  <path d="M500,145 L590,145" fill="none" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="545" y="120" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="700" fill="#1f2937">1. zero-shot inference</text>
+  <text x="545" y="135" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#4b5563">(adapter disabled)</text>
+
+  <!-- Arrow 2: train -> model (bottom), fine-tuning -->
+  <path d="M500,485 L590,485" fill="none" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="545" y="460" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="700" fill="#1f2937">2. supervised fine-tuning</text>
+  <text x="545" y="475" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#4b5563">(label-masked teacher forcing)</text>
+
+  <!-- Arrow 3: test -> model (middle, elbow), same test cases re-used after training -->
+  <path d="M390,200 L390,300 L590,300" fill="none" stroke="#374151" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+  <text x="490" y="288" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="700" fill="#1f2937">3. fine-tuned inference</text>
+  <text x="490" y="381" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#4b5563">(same 100 cases, adapter enabled)</text>
+
+  <!-- Model outputs -->
+  <path d="M970,145 L1060,145" fill="none" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M970,485 L1060,485" fill="none" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Report boxes -->
+  <rect x="1060" y="90" width="210" height="110" rx="8" fill="#eef4fb" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="1165" y="138" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="700" fill="#1f2937">Generated reports</text>
+  <text x="1165" y="158" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#374151">zero-shot pass (before)</text>
+
+  <rect x="1060" y="430" width="210" height="110" rx="8" fill="#eef4fb" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="1165" y="478" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="700" fill="#1f2937">Generated reports</text>
+  <text x="1165" y="498" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#374151">fine-tuned pass (after)</text>
+
+  <!-- Arrows into evaluation -->
+  <path d="M1270,150 L1338,235" fill="none" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M1270,480 L1338,395" fill="none" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Evaluation box (result / outcome accent) -->
+  <rect x="1340" y="200" width="340" height="220" rx="10" fill="#eaf6ee" stroke="#3f8f5f" stroke-width="1.5"/>
+  <text x="1510" y="258" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="700" fill="#1f5c37">Paired evaluation</text>
+  <text x="1510" y="280" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#2f4f3d">same test cases, before vs. after</text>
+  <text x="1510" y="300" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#2f4f3d">BLEU · ROUGE-1/2/L · METEOR</text>
+  <text x="1510" y="318" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#2f4f3d">BERTScore · CIDEr</text>
+  <text x="1510" y="336" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#2f4f3d">+ latency · tokens · GPU memory</text>
+  <text x="1510" y="354" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#5b6b5f">scored against Test split ground truth</text>
+</svg>

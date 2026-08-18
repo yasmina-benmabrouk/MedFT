@@ -1,0 +1,34 @@
+# Deep learning
+torch>=2.1.0
+transformers>=4.45.0
+accelerate>=0.25.0
+peft>=0.11.0
+bitsandbytes>=0.43.0
+
+# Image processing
+Pillow>=10.0.0
+
+# Configuration
+pyyaml>=6.0
+
+# NLP metrics
+evaluate>=0.4.0
+bert-score>=0.3.13
+rouge-score>=0.1.2
+nltk>=3.8
+pycocoevalcap>=1.2
+sacrebleu>=2.3.1
+
+# Data & visualization
+pandas>=2.0
+numpy>=1.24
+matplotlib>=3.7
+seaborn>=0.12
+
+# Utilities
+tqdm>=4.65
+rich>=13.0
+
+# Notebook execution
+jupyter>=1.0
+ipykernel>=6.25

@@ -2,6 +2,11 @@
 
 **Controlled evaluation of parameter-efficient fine-tuning for medical vision-language report generation.**
 
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](...)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.x-ee4c2c?logo=pytorch&logoColor=white)](...)
+[![Kaggle](https://img.shields.io/badge/Experiments-Kaggle-20BEFF?logo=kaggle&logoColor=white)](...)
+[![Research](https://img.shields.io/badge/Research-Medical%20AI-purple)](...)
+
 MedFT investigates how much supervised LoRA/QLoRA adaptation improves the report-generation performance of a medical vision-language model compared with the **same base model evaluated zero-shot**, using the same prompt and the same held-out test cases.
 
 ---

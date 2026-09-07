@@ -1,4 +1,4 @@
-# MedFT
+# MedFT : LoRA/QLoRA Fine-Tuning of a Medical Vision-Language Model
 
 **Controlled evaluation of parameter-efficient fine-tuning for medical vision-language report generation.**
 
